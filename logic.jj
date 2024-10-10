@@ -1,0 +1,60 @@
+PARSER_BEGIN(CParser) 
+
+public class CParser {
+    public static void main(String[] args) throws ParseException {
+        CParser instance = new CParser(System.in);
+        instance.Start();
+    }
+}
+
+PARSER_END(CParser)
+
+SKIP : {
+    " " | "\n" | "\t" | "\r" //Skipping whitespace
+}
+
+TOKEN : {
+    <IF: "if"> |
+    <ELSE: "else"> | 
+    <INT: "int"> | 
+    <DIV: "/"> |
+    <MUL: "*"> |
+    <ADD: "+"> |
+    <SUB: "-"> |
+    <SEMICOLON: ";"> |
+    <ASSIGN: "="> |
+    <IDENTIFIER: (["a"-"z", "A"-"Z"])> |
+    <NUMBER: (["0"-"9"])+>
+}
+
+void Start() : {} {
+    (Statement())*
+}
+
+void Statement() : {} {
+    IfStatement() | Assignment() | Declaration()
+}
+
+void IfStatement() : {} {
+    <IF> "(" Expression() ")" Statement() (LOOKAHEAD(1) <ELSE> Statement())?
+}
+
+void Assignment() : {} {
+    <IDENTIFIER> <ASSIGN> Expression() <SEMICOLON>
+}
+
+void Declaration() : {} {
+    <INT> <IDENTIFIER> [<ASSIGN> Expression()] <SEMICOLON>
+}
+
+void Expression() : {} {
+    Term() (<ADD> | <SUB> Term())*
+}
+
+void Term() : {} {
+    Factor() (<MUL> | <DIV> Factor())* 
+}
+
+void Factor() : {} {
+    <NUMBER> | <IDENTIFIER> | "(" Expression() ")"
+}

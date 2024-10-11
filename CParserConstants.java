@@ -9,30 +9,34 @@ public interface CParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int IF = 5;
+  int IF = 8;
   /** RegularExpression Id. */
-  int ELSE = 6;
+  int ELSE = 9;
   /** RegularExpression Id. */
-  int INT = 7;
+  int INT = 10;
   /** RegularExpression Id. */
-  int DIV = 8;
+  int DIV = 11;
   /** RegularExpression Id. */
-  int MUL = 9;
+  int MUL = 12;
   /** RegularExpression Id. */
-  int ADD = 10;
+  int ADD = 13;
   /** RegularExpression Id. */
-  int SUB = 11;
+  int SUB = 14;
   /** RegularExpression Id. */
-  int SEMICOLON = 12;
+  int SEMICOLON = 15;
   /** RegularExpression Id. */
-  int ASSIGN = 13;
+  int COMMA = 16;
   /** RegularExpression Id. */
-  int IDENTIFIER = 14;
+  int ASSIGN = 17;
   /** RegularExpression Id. */
-  int NUMBER = 15;
+  int IDENTIFIER = 18;
+  /** RegularExpression Id. */
+  int NUMBER = 19;
 
   /** Lexical state. */
   int DEFAULT = 0;
+  /** Lexical state. */
+  int IN_COMMENT = 1;
 
   /** Literal token values. */
   String[] tokenImage = {
@@ -41,6 +45,9 @@ public interface CParserConstants {
     "\"\\n\"",
     "\"\\t\"",
     "\"\\r\"",
+    "\"/*\"",
+    "<token of kind 6>",
+    "\"*/\"",
     "\"if\"",
     "\"else\"",
     "\"int\"",
@@ -49,11 +56,14 @@ public interface CParserConstants {
     "\"+\"",
     "\"-\"",
     "\";\"",
+    "\",\"",
     "\"=\"",
     "<IDENTIFIER>",
     "<NUMBER>",
     "\"(\"",
     "\")\"",
+    "\"{\"",
+    "\"}\"",
   };
 
 }

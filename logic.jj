@@ -1,16 +1,31 @@
 PARSER_BEGIN(CParser) 
 
 public class CParser {
-    public static void main(String[] args) throws ParseException {
-        CParser instance = new CParser(System.in);
-        instance.Start();
+    public static void main(String[] args) {
+        try {
+            CParser instance = new CParser(System.in);
+            instance.Start();
+        } catch (Throwable e) {
+            System.out.println("Syntax Error: \n");
+            e.printStackTrace();
+        }
+
     }
 }
 
 PARSER_END(CParser)
 
 SKIP : {
-    " " | "\n" | "\t" | "\r" //Skipping whitespace
+    " " | "\n" | "\t" | "\r" |
+    "/*": IN_COMMENT 
+}
+
+<IN_COMMENT> SKIP : {
+    <~[]>
+}
+
+<IN_COMMENT> SKIP : {
+    "*/": DEFAULT
 }
 
 TOKEN : {
@@ -22,6 +37,7 @@ TOKEN : {
     <ADD: "+"> |
     <SUB: "-"> |
     <SEMICOLON: ";"> |
+    <COMMA: ","> |
     <ASSIGN: "="> |
     <IDENTIFIER: (["a"-"z", "A"-"Z"])> |
     <NUMBER: (["0"-"9"])+>
@@ -32,7 +48,26 @@ void Start() : {} {
 }
 
 void Statement() : {} {
-    IfStatement() | Assignment() | Declaration()
+    Declaration() | 
+    IfStatement() | 
+    LOOKAHEAD(2) FunctionCall() | 
+    LOOKAHEAD(2) Assignment()
+}
+
+void FunctionDef() : {} {
+    <INT> <IDENTIFIER> "(" (Parameter() (LOOKAHEAD(1) <COMMA> Parameter())* )? ")" "{" (Statement())* "}"
+}
+
+void Parameter() : {} {
+    <INT> <IDENTIFIER>
+}
+
+void FunctionCall() : {} {
+    <IDENTIFIER> "(" ( Argument() (LOOKAHEAD(1) <COMMA> Argument())* )? ")" <SEMICOLON>
+}
+
+void Argument() : {} {
+    Expression()
 }
 
 void IfStatement() : {} {
